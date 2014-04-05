@@ -1,6 +1,6 @@
-# Netterjack is Open Source!
+# Natterjack is Open Source!
 
-All files that are part of netterjack are licensed under the open source
+All files that are part of natterjack are licensed under the open source
 MIT license.
 
 ## The MIT License (MIT)
