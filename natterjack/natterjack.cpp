@@ -8,7 +8,32 @@
 // ---------------------------------------------------------------------------
 
 #include <iostream>
+#include <vector>
+
+class Application
+{
+public:
+	typedef std::vector<std::string> ParameterList;
+
+	static int main(ParameterList args)
+	{
+		for (auto arg : args)
+		{
+			std::cout << "Hello World!" << arg << std::endl;
+		}
+
+		return 0;
+	}
+};
 
 extern "C" int main(int argc, const char* argv[]) {
-	std::cout << "Hello World!" << std::endl;
+
+	Application::ParameterList args;
+
+	for (int i = 1; i < argc; i++)
+	{
+		args.push_back(std::string(argv[i]));
+	}
+
+	return Application::main(args);
 }
