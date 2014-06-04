@@ -3,7 +3,11 @@ require 'rake/clean'
 
 # Configuration stuff
 BIN_DIR = 'bin'
+BUILD_DIR = 'build'
+
+# Accumulators for build outputs
 ALL_EXES = []
+ALL_TEST = []
 
 directory BIN_DIR
 
@@ -17,15 +21,23 @@ def build_exe name
   end
   task exe_file => BIN_DIR
   ALL_EXES << exe_file
+
+  test_name = "test_#{name}"
+  task test_name => exe_file do
+    sh exe_file
+  end
+
+  ALL_TEST << test_name
 end
 
 # targets
 build_exe 'natterjack'
 
-
 CLOBBER << ALL_EXES
 
 # Extra dependancy info (and pseudo tasks)
 multitask :all => ALL_EXES
+
+task :test => ALL_TEST
 
 task :default => :all
