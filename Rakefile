@@ -1,43 +1,62 @@
 require 'rake'
 require 'rake/clean'
+require 'rake/tasklib'
 
-# Configuration stuff
-BIN_DIR = 'bin'
-BUILD_DIR = 'build'
+module Natterjack
+  # Configuration stuff
+  BIN_DIR = 'bin'
+  BUILD_DIR = 'build'
 
-# Accumulators for build outputs
-ALL_EXES = []
-ALL_TEST = []
+  ## Executable
+  # 
+  # Represents the tasks required to build a native executable
+  # from C++ code
+  class Executable < Rake::TaskLib
 
-directory BIN_DIR
+    attr_accessor :name
 
-# Compilation commands
-def build_exe name
-  # Get the file that we need to build
-  exe_file = File.join(BIN_DIR, name)
-  cxx_files = Dir["#{name}/*.cpp"]
-  file exe_file => cxx_files do
-    sh %{clang++ -std=c++11 -o #{exe_file} #{cxx_files.join}}
+    def initialize(name)
+      @name = name
+      yield self if block_given?
+      _write_rules
+    end
+
+    def _write_rules
+      # Get the file that we need to build
+      exe_file = File.join(BIN_DIR, @name)
+      cxx_files = Dir["#{@name}/*.cpp"]
+
+      # compile and link the executable
+      file exe_file => cxx_files do
+        sh %{clang++ -std=c++11 -o #{exe_file} #{cxx_files.join}}
+      end
+
+      # make sure we have a directory to compile into
+      directory BIN_DIR
+      task exe_file => BIN_DIR
+
+      # create the test taask
+      test_name = "test_#{@name}"
+      task test_name => exe_file do
+        sh exe_file
+      end
+
+      # Create the wrapper task
+      task @name.intern => exe_file
+
+      CLOBBER.include(exe_file)
+    end
+
   end
-  task exe_file => BIN_DIR
-  ALL_EXES << exe_file
-
-  test_name = "test_#{name}"
-  task test_name => exe_file do
-    sh exe_file
-  end
-
-  ALL_TEST << test_name
+  
 end
 
 # targets
-build_exe 'natterjack'
-
-CLOBBER << ALL_EXES
+Natterjack::Executable.new 'natterjack'
 
 # Extra dependancy info (and pseudo tasks)
-multitask :all => ALL_EXES
+multitask :all => [:natterjack]
 
-task :test => ALL_TEST
+task :test => [ 'test_natterjack' ]
 
 task :default => :all
