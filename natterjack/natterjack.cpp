@@ -10,6 +10,8 @@
 #include <iostream>
 #include <vector>
 
+extern void parseString(std::string& string);
+
 class Application
 {
 public:
@@ -21,6 +23,11 @@ public:
 		{
 			std::cout << "Hello World!" << arg << std::endl;
 		}
+
+		std::string input = "hello world";
+		parseString(input);
+		input = "1234";
+		parseString(input);
 
 		return 0;
 	}

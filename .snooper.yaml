@@ -1,4 +1,6 @@
 base_path: .
-paths: natterjack/
 command: rake test
-filters: \.cpp$
+filters:
+  - \.cpp$
+  - \.ragel$
+  - Rakefile

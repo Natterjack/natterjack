@@ -24,11 +24,20 @@ module Natterjack
     def _write_rules
       # Get the file that we need to build
       exe_file = File.join(BIN_DIR, @name)
-      cxx_files = Dir["#{@name}/*.cpp"]
+      ragel_files = Rake::FileList["#{@name}/*.ragel"]
+      converted_ragel_files = ragel_files.ext(".cpp")
+      cxx_files = Rake::FileList["#{@name}/*.cpp"]
+
+      cxx_files |= converted_ragel_files
+      
+      # convert ragel files to C++ code with ragel
+      rule ".cpp" => ".ragel" do |t|
+        sh "ragel -o #{t.name} #{t.source}"
+      end
 
       # compile and link the executable
       file exe_file => cxx_files do
-        sh %{clang++ -std=c++11 -o #{exe_file} #{cxx_files.join}}
+        sh %{clang++ -std=c++11 -o #{exe_file} #{cxx_files.join(" ")}}
       end
 
       # make sure we have a directory to compile into
@@ -44,6 +53,7 @@ module Natterjack
       # Create the wrapper task
       task @name.intern => exe_file
 
+      CLEAN.include(converted_ragel_files)
       CLOBBER.include(exe_file)
     end
 

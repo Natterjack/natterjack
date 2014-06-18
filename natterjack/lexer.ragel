@@ -1,0 +1,41 @@
+// ---------------------------------------------------------------------------
+// 
+//    Project Natterjack - Statically Typed Language, Compiler and Runtime
+// 
+// This file is distributed under the open source MIT license. See LICENSE.md
+// for more info.
+// 
+// ---------------------------------------------------------------------------
+
+#include <string>
+#include <iostream>
+
+#if 0
+%%{
+ 
+  machine test_lexer;
+  
+  integer = ('+'|'-')?[0-9]+;
+  
+  main := |*
+  integer => { std::cout << "Integer" << std::endl; };
+  *|;  
+  
+}%%
+#endif
+
+%%write data;
+
+void parseString(std::string& string) {
+
+	// variables that ragel needs to process the string
+	const char *p = string.c_str();
+	const char *pe = p + string.size();
+	const char *eof = pe;
+
+	const char* ts, * te;
+	int cs, act;
+
+	%%write init;
+	%%write exec;
+}
