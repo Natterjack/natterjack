@@ -10,7 +10,7 @@
 #include <iostream>
 #include <vector>
 
-extern void parseString(std::string& string);
+#include "lexer.h"
 
 class Application
 {
@@ -19,16 +19,10 @@ public:
 
 	static int main(ParameterList args)
 	{
-		for (auto arg : args)
-		{
-			std::cout << "Hello World!" << arg << std::endl;
+		for (auto arg : args) {
+			std::cout << "parsing '" << arg << "'" << std::endl;
+			parseString(arg);
 		}
-
-		std::string input = "hello world";
-		parseString(input);
-		input = "1234";
-		parseString(input);
-
 		return 0;
 	}
 };

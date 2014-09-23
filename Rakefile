@@ -44,7 +44,7 @@ module Natterjack
       directory BIN_DIR
       task exe_file => BIN_DIR
 
-      # create the test taask
+      # create the test task
       test_name = "test_#{@name}"
       task test_name => exe_file do
         sh exe_file
