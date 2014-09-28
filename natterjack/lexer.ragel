@@ -7,35 +7,43 @@
 // 
 // ---------------------------------------------------------------------------
 
+#include "lexer.h"
+#include "tokenstream.h"
+
 #include <string>
 #include <iostream>
 
-#if 0
 %%{
- 
-  machine test_lexer;
-  
-  integer = ('+'|'-')?[0-9]+;
-  
+
+  machine NatterjackLexer;
+
+  integer = [0-9]+ ;
+  identifier = [a-z_] ;
+   
   main := |*
-  integer => { std::cout << "Integer" << std::endl; };
+	  identifier => { std::cout << "identifier" << std::endl; };
+	  integer => { std::cout << "integer" << std::endl; };
   *|;  
   
 }%%
-#endif
 
 %%write data;
 
-void parseString(std::string& string) {
+using namespace natterjack;
 
-	// variables that ragel needs to process the string
-	const char *p = string.c_str();
-	const char *pe = p + string.size();
-	const char *eof = pe;
-
-	const char* ts, * te;
-	int cs, act;
-
+Lexer::Lexer(std::string buffer)
+	: buffer(buffer)
+{
 	%%write init;
+
+	p = buffer.c_str();
+	pe = p + buffer.size();
+	eof = pe;
+}
+	
+Token* Lexer::next()
+{
 	%%write exec;
+
+	return nullptr;
 }

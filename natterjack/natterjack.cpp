@@ -10,7 +10,7 @@
 #include <iostream>
 #include <vector>
 
-#include "lexer.h"
+#include "tokenstream.h"
 
 class Application
 {
@@ -21,7 +21,13 @@ public:
 	{
 		for (auto arg : args) {
 			std::cout << "parsing '" << arg << "'" << std::endl;
-			parseString(arg);
+			natterjack::TokenStream stream = natterjack::TokenStream::createFromString(arg);
+			auto tok = stream.next();
+			while (tok != nullptr)
+			{
+				std::cout << tok << std::endl;
+				tok = stream.next();
+			}
 		}
 		return 0;
 	}

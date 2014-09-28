@@ -7,30 +7,36 @@
 // 
 // ---------------------------------------------------------------------------
 
-#pragma once
-
 #include <string>
+#include "lexer.h"
+#include "tokenstream.h"
 
 namespace natterjack
 {
-	struct Token;
+}
 
-	class Lexer
-	{
-	public:
-		Lexer(std::string buffer);
-		Token* next();
+using namespace natterjack;
 
-	private:
-		// Ragel's stuff
-		// buffer state
-		const char* p, * pe, * eof;
-		// current token
-		const char* ts, * te;
-		// machine state
-		int act, cs, top, stack[1];
+TokenStream::TokenStream(std::string input)
+	: lexer(input)
+{
+}
 
-		// our 'buffer'
-		std::string buffer;
-	};
+TokenStream::TokenStream()
+	: lexer("")
+{
+}
+
+TokenStream::~TokenStream()
+{
+}
+
+TokenStream TokenStream::createFromString(const std::string& input)
+{
+	return TokenStream(input);
+}
+
+Token* TokenStream::next()
+{
+	return lexer.next();
 }
