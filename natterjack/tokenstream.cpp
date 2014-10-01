@@ -8,12 +8,10 @@
 // ---------------------------------------------------------------------------
 
 #include <string>
+#include <iostream>
+
 #include "lexer.h"
 #include "tokenstream.h"
-
-namespace natterjack
-{
-}
 
 using namespace natterjack;
 

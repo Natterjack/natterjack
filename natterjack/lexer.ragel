@@ -17,13 +17,11 @@
 
   machine NatterjackLexer;
 
-  integer = [0-9]+ ;
-  identifier = [a-z_] ;
-   
   main := |*
-	  identifier => { std::cout << "identifier" << std::endl; };
-	  integer => { std::cout << "integer" << std::endl; };
-  *|;  
+    alpha+ => { std::cout << "identifier" << std::endl; };
+    alnum+ => { std::cout << "thingy" << std::endl; };
+	space+ => { std::cout << "Space!!!" << std::endl; };
+  *|;
   
 }%%
 
@@ -31,11 +29,12 @@
 
 using namespace natterjack;
 
-Lexer::Lexer(std::string buffer)
-	: buffer(buffer)
+Lexer::Lexer(std::string s)
+	: buffer(s), cs(0), act(0), top(0)
 {
 	%%write init;
 
+	// set up the buffer here
 	p = buffer.c_str();
 	pe = p + buffer.size();
 	eof = pe;
@@ -44,6 +43,12 @@ Lexer::Lexer(std::string buffer)
 Token* Lexer::next()
 {
 	%%write exec;
+
+	if (cs == NatterjackLexer_error) {
+		std::cerr << "error!" << std::endl;
+	} else {
+		std::cout << "all good in the 'hood" << std::endl;
+	}
 
 	return nullptr;
 }
