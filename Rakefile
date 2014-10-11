@@ -37,6 +37,9 @@ end
 class Project < Rake::TaskLib
 
   attr_accessor :name
+
+  # The base directory for this project
+  attr_accessor :base_dir
   
   def initialize(name)
     setup name
@@ -55,6 +58,7 @@ class Project < Rake::TaskLib
   def setup(name)
     @name = name
     @configurations = []
+    @base_dir = name
   end
 
   ## Create Default Configuration
@@ -77,6 +81,27 @@ class Project < Rake::TaskLib
     @configurations << config
   end
 
+  ## Expand Path
+  #
+  # Expands a path relative to the project directory
+
+  def expand_path(path)
+    File.join base_dir, path
+  end
+
+  ## Source Files
+  #
+  # Finds all of the files with a given extension in the source
+  # directory of a configuration
+
+  def src_files(configuration, extension)
+    Rake::FileList.new do |fl|
+      configuration.src_dirs.each do |dir|
+        fl.include "#{expand_path(dir)}/*.#{extension}"
+      end
+    end
+  end
+
   ## Write Rules
   #
   # Turns the project into a set of rules for Rake to execute
@@ -91,13 +116,17 @@ class Project < Rake::TaskLib
       bin_dir = "bin/#{name}/#{configuration.name}"
       directory bin_dir
 
-      cxx_files = Rake::FileList["#{name}/*.cpp"]
+      # Collect all of the c++ files we can find
+      cxx_files = src_files configuration, "cpp"
 
-      ragel_files = Rake::FileList["#{name}/*.ragel"]
+      # Collect the ragel files
+      ragel_files = src_files configuration, "ragel"
+
+      # for each ragel file convert it to a cpp file for compilation
       ragel_files.each do |rlfile|
         cxx_file = rlfile.pathmap "%X.cpp"
 
-        cxx_files << cxx_file
+        cxx_files.include cxx_file
         CLEAN.include cxx_file
 
         file cxx_file => rlfile do
@@ -108,12 +137,15 @@ class Project < Rake::TaskLib
       # One-shot compile and link
       output_file = "#{bin_dir}/#{name}"
       file output_file => cxx_files do
-        sh %{#{configuration.cxx} #{configuration.cxx_flags.join " "} -o #{output_file} #{cxx_files.join " "}}
+        cflags = configuration.cxx_flags.join " "
+        files = cxx_files.join " "
+        sh %{#{configuration.cxx} #{cflags} -o #{output_file} #{files}}
       end
+
       file output_file => bin_dir
       CLOBBER.include output_file
 
-      configuration_name = "#{name}-#{configuration.name}".intern
+      configuration_name = "#{name}_#{configuration.name}".intern
       desc "Bulid #{output_file}."
       task configuration_name => output_file
       configuration_names << configuration_name
