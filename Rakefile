@@ -20,11 +20,15 @@ class Configuration
   # Source directories
   attr_accessor :src_dirs
 
+  # Run output
+  attr_accessor :run_output
+
   def initialize(name)
     @name = name
     @cxx_flags = []
     @src_dirs = []
     @cxx = "clang++ -std=c++11"
+    @run_output = false
   end
 
 end
@@ -129,7 +133,7 @@ class Project < Rake::TaskLib
         cxx_files.include cxx_file
         CLEAN.include cxx_file
 
-        file cxx_file => rlfile do
+        file cxx_file => [rlfile] do
           sh %{ragel -o #{cxx_file} #{rlfile}}
         end
       end
@@ -148,7 +152,16 @@ class Project < Rake::TaskLib
       configuration_name = "#{name}_#{configuration.name}".intern
       desc "Bulid #{output_file}."
       task configuration_name => output_file
+
       configuration_names << configuration_name
+
+      if configuration.run_output
+        run_target = "run_#{name}".intern
+
+        task run_target => output_file do
+          sh output_file
+        end
+      end
     end
 
     desc "Build #{name}"
@@ -158,17 +171,25 @@ end
 
 # targets
 Project.new 'natterjack' do |project|
+  debug_cxx_flags = %w{-DNDEBUG -o3}
   project.configuration 'debug' do |debug|
     debug.cxx_flags |= %w{-g -DDEBUG -o0}
     debug.src_dirs << '.'
   end
   project.configuration 'release' do |release|
-    release.cxx_flags |= %w{-DNDEBUG -o3}
+    release.cxx_flags |= debug_cxx_flags
     release.src_dirs << '.'
+  end
+  project.configuration 'test' do |test|
+    test.cxx_flags |= debug_cxx_flags
+    test.src_dirs << '.'
+    test.run_output = true
   end
 end
 
 # Extra dependancy info (and pseudo tasks)
 multitask :all => [:natterjack]
+
+task :test => [:run_natterjack]
 
 task :default => :all
