@@ -172,17 +172,18 @@ end
 # targets
 Project.new 'natterjack' do |project|
   debug_cxx_flags = %w{-DNDEBUG -o3}
+  dirs = [ 'src' ]
   project.configuration 'debug' do |debug|
     debug.cxx_flags |= %w{-g -DDEBUG -o0}
-    debug.src_dirs << '.'
+    debug.src_dirs = dirs
   end
   project.configuration 'release' do |release|
     release.cxx_flags |= debug_cxx_flags
-    release.src_dirs << '.'
+    release.src_dirs = dirs
   end
   project.configuration 'test' do |test|
     test.cxx_flags |= debug_cxx_flags
-    test.src_dirs << '.'
+    test.src_dirs = dirs
     test.run_output = true
   end
 end
