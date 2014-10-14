@@ -20,12 +20,16 @@ class Configuration
   # Source directories
   attr_accessor :src_dirs
 
+  # Linker flags - just passed to the C++ Compiler
+  attr_accessor :ld_flags
+
   # Run output
   attr_accessor :run_output
 
   def initialize(name)
     @name = name
     @cxx_flags = []
+    @ld_flags = []
     @src_dirs = []
     @cxx = "clang++ -std=c++11"
     @run_output = false
@@ -114,6 +118,8 @@ class Project < Rake::TaskLib
 
     configuration_names = []
 
+    all_ragel_files = []
+
     @configurations.each do |configuration|
 
       # The directory where we will put the exe at the end of this
@@ -125,25 +131,19 @@ class Project < Rake::TaskLib
 
       # Collect the ragel files
       ragel_files = src_files configuration, "ragel"
+      cxx_files.include ragel_files.pathmap "%X.cpp"
 
-      # for each ragel file convert it to a cpp file for compilation
-      ragel_files.each do |rlfile|
-        cxx_file = rlfile.pathmap "%X.cpp"
+      all_ragel_files.concat ragel_files
 
-        cxx_files.include cxx_file
-        CLEAN.include cxx_file
-
-        file cxx_file => [rlfile] do
-          sh %{ragel -o #{cxx_file} #{rlfile}}
-        end
-      end
+      cxx_files.uniq!
 
       # One-shot compile and link
       output_file = "#{bin_dir}/#{name}"
       file output_file => cxx_files do
         cflags = configuration.cxx_flags.join " "
+        ldflags = configuration.ld_flags.join " "
         files = cxx_files.join " "
-        sh %{#{configuration.cxx} #{cflags} -o #{output_file} #{files}}
+        sh %{#{configuration.cxx} #{cflags} #{ldflags} -o #{output_file} #{files}}
       end
 
       file output_file => bin_dir
@@ -164,6 +164,17 @@ class Project < Rake::TaskLib
       end
     end
 
+    # for each ragel file convert it to a cpp file for compilation
+    all_ragel_files.uniq.each do |rlfile|
+      cxx_file = rlfile.pathmap "%X.cpp"
+
+      CLEAN.include cxx_file
+
+      file cxx_file => [rlfile] do
+        sh %{ragel -o #{cxx_file} #{rlfile}}
+      end
+    end
+
     desc "Build #{name}"
     multitask name.intern => configuration_names
   end
@@ -171,19 +182,24 @@ end
 
 # targets
 Project.new 'natterjack' do |project|
-  debug_cxx_flags = %w{-DNDEBUG -o3}
+  debug_cxx_flags = %w{-g -DDEBUG -o0}
   dirs = [ 'src' ]
   project.configuration 'debug' do |debug|
-    debug.cxx_flags |= %w{-g -DDEBUG -o0}
-    debug.src_dirs = dirs
+    debug.cxx_flags |= %w{-DNDEBUG -o3}
+    debug.src_dirs.concat dirs
   end
   project.configuration 'release' do |release|
     release.cxx_flags |= debug_cxx_flags
-    release.src_dirs = dirs
+    release.src_dirs.concat dirs
   end
   project.configuration 'test' do |test|
     test.cxx_flags |= debug_cxx_flags
-    test.src_dirs = dirs
+    gtest_dir = ENV['GTEST_DIR']
+    test.cxx_flags << "-I#{gtest_dir}/include"
+    test.ld_flags << "#{gtest_dir}/lib/.libs/libgtest_main.a"
+    test.ld_flags << "#{gtest_dir}/lib/.libs/libgtest.a"
+    test.src_dirs.concat dirs
+    test.src_dirs << 'test'
     test.run_output = true
   end
 end

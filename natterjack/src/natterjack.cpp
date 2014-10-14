@@ -33,14 +33,14 @@ public:
 	}
 };
 
-extern "C" int main(int argc, const char* argv[]) {
+// extern "C" int main(int argc, const char* argv[]) {
 
-	Application::ParameterList args;
+// 	Application::ParameterList args;
 
-	for (int i = 1; i < argc; i++)
-	{
-		args.push_back(std::string(argv[i]));
-	}
+// 	for (int i = 1; i < argc; i++)
+// 	{
+// 		args.push_back(std::string(argv[i]));
+// 	}
 
-	return Application::main(args);
-}
+// 	return Application::main(args);
+// }
