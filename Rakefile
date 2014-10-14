@@ -194,6 +194,7 @@ Project.new 'natterjack' do |project|
   end
   project.configuration 'test' do |test|
     test.cxx_flags |= debug_cxx_flags
+    test.cxx_flags << "-iquote #{project.base_dir}/src"
     gtest_dir = ENV['GTEST_DIR']
     test.cxx_flags << "-I#{gtest_dir}/include"
     test.ld_flags << "#{gtest_dir}/lib/.libs/libgtest_main.a"
