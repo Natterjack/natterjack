@@ -20,11 +20,14 @@ namespace natterjack
 	struct Token
 	{
 		enum {
-			TOK_OPERATOR,
-			TOK_INTEGER
+			ERROR = -1,
+			UNDEFINED = 0,
+			OPERATOR,
+			INTEGER,
+			END
 		} type;
 		union {
-			int value;
+			int iValue;
 		};
 	};
 

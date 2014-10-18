@@ -10,17 +10,27 @@
 #include "lexer.h"
 #include "tokenstream.h"
 
+#include <cstdlib>
+
 #include <string>
 #include <iostream>
 
-%%{
+#define SET_TOKEN(t) token->type = Token::t;
 
+%%{
   machine NatterjackLexer;
 
   main := |*
-    alpha+ => { std::cout << "identifier" << std::endl; };
-    alnum+ => { std::cout << "thingy" << std::endl; };
-	space+ => { std::cout << "Space!!!" << std::endl; };
+
+	# Decimal number literal
+    digit+ => {
+	  auto stuff = std::string(ts, te-ts);
+	  token->iValue = atoi(stuff.c_str());
+	  SET_TOKEN(INTEGER);
+	  fbreak;
+    };
+	
+    space+;
   *|;
   
 }%%
@@ -42,13 +52,24 @@ Lexer::Lexer(std::string s)
 	
 Token* Lexer::next()
 {
-	%%write exec;
+	auto token = new Token();
 
-	if (cs == NatterjackLexer_error) {
-		std::cerr << "error!" << std::endl;
-	} else {
-		std::cout << "all good in the 'hood" << std::endl;
-	}
+	token->type = Token::UNDEFINED;
 
-	return nullptr;
+	do {
+
+		if (cs >= NatterjackLexer_first_final) {
+			SET_TOKEN(END);
+		}
+
+		%%write exec;
+		
+		if (cs == NatterjackLexer_error) {
+			SET_TOKEN(ERROR);
+		}
+
+		
+	} while (token->type == Token::UNDEFINED);
+
+	return token;
 }
