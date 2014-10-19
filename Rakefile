@@ -130,7 +130,7 @@ class Project < Rake::TaskLib
       cxx_files = src_files configuration, "cpp"
 
       # Collect the ragel files
-      ragel_files = src_files configuration, "ragel"
+      ragel_files = src_files configuration, "rl"
       cxx_files.include ragel_files.pathmap "%X.cpp"
 
       all_ragel_files.concat ragel_files
@@ -171,7 +171,7 @@ class Project < Rake::TaskLib
       CLEAN.include cxx_file
 
       file cxx_file => [rlfile] do
-        sh %{ragel -o #{cxx_file} #{rlfile}}
+        sh %{ragel -C -o #{cxx_file} #{rlfile}}
       end
     end
 
