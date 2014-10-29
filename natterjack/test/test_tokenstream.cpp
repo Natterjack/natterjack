@@ -31,29 +31,43 @@ TEST(TokenStream,Integers) {
 	auto token = ts.next();
 	ASSERT_NE(nullptr, token);
 	EXPECT_EQ(Token::INTEGER, token->type);
-	EXPECT_EQ(1, token->iValue);
+	EXPECT_EQ("1", token->value);
 
 	token = ts.next();
 	ASSERT_NE(nullptr, token);
 	EXPECT_EQ(Token::INTEGER, token->type);
-	EXPECT_EQ(2, token->iValue);
+	EXPECT_EQ("2", token->value);
 
 	token = ts.next();
 	ASSERT_NE(nullptr, token);
 	EXPECT_EQ(Token::INTEGER, token->type);
-	EXPECT_EQ(3, token->iValue);
+	EXPECT_EQ("3", token->value);
 
 	token = ts.next();
 	ASSERT_NE(nullptr, token);
 	EXPECT_EQ(Token::INTEGER, token->type);
-	EXPECT_EQ(23, token->iValue);
+	EXPECT_EQ("23", token->value);
 
 	token = ts.next();
 	ASSERT_NE(nullptr, token);
 	EXPECT_EQ(Token::INTEGER, token->type);
-	EXPECT_EQ(232332, token->iValue);
+	EXPECT_EQ("232332", token->value);
 
 	token = ts.next();
 	ASSERT_NE(nullptr, token);
 	EXPECT_EQ(Token::END, token->type);
+
+	token = ts.next();
+	ASSERT_NE(nullptr, token);
+	EXPECT_EQ(Token::END, token->type);
+}
+
+TEST(Tokenstream,Identifiers) {
+	auto identifiers = "foo bar baz buzz";
+	auto ts = TokenStream::createFromString(identifiers);
+
+	auto token = ts.next();
+	ASSERT_NE(nullptr, token);
+	EXPECT_EQ(Token::IDENTIFIER, token->type);
+	EXPECT_EQ("foo", token->value);
 }

@@ -24,11 +24,10 @@ namespace natterjack
 			UNDEFINED = 0,
 			OPERATOR,
 			INTEGER,
+			IDENTIFIER,
 			END
 		} type;
-		union {
-			int iValue;
-		};
+		std::string value;
 	};
 
 	// TokenStream

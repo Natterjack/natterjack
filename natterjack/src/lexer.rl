@@ -15,18 +15,24 @@
 #include <string>
 #include <iostream>
 
-#define SET_TOKEN(t) token->type = Token::t;
+#define CAPTURE_TOKEN(t) \
+	token->value = std::string(ts, te-ts); \
+	SET_TOKEN(t)
+#define SET_TOKEN(t) \
+	token->type = Token::t
 
 %%{
   machine NatterjackLexer;
 
   main := |*
 
-	# Decimal number literal
-    digit+ => {
-	  auto stuff = std::string(ts, te-ts);
-	  token->iValue = atoi(stuff.c_str());
-	  SET_TOKEN(INTEGER);
+	digit+ => {
+	  CAPTURE_TOKEN(INTEGER);
+	  fbreak;
+    };
+
+    alpha (alpha | digit) * => {
+	  CAPTURE_TOKEN(IDENTIFIER);
 	  fbreak;
     };
 	
