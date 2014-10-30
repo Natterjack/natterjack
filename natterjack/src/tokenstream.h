@@ -14,22 +14,6 @@
 
 namespace natterjack
 {
-	// Token
-	//
-	// Represents a single lexeme from an input stream.
-	struct Token
-	{
-		enum {
-			ERROR = -1,
-			UNDEFINED = 0,
-			OPERATOR,
-			INTEGER,
-			IDENTIFIER,
-			END
-		} type;
-		std::string value;
-	};
-
 	// TokenStream
 	//
 	// A source of tokens. Represents the current file or buffer being compiled.

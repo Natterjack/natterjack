@@ -13,7 +13,21 @@
 
 namespace natterjack
 {
-	struct Token;
+	// Token
+	//
+	// Represents a single lexeme from an input stream.
+	struct Token
+	{
+		enum {
+			ERROR = -1,
+			UNDEFINED = 0,
+			OPERATOR,
+			INTEGER,
+			IDENTIFIER,
+			END
+		} type;
+		std::string value;
+	};
 
 	class Lexer
 	{

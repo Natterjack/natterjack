@@ -35,7 +35,14 @@
 	  CAPTURE_TOKEN(IDENTIFIER);
 	  fbreak;
     };
-	
+
+    opchar = [+\-*/=];
+		
+    opchar+ => {
+		CAPTURE_TOKEN(OPERATOR);
+		fbreak;
+	};
+
     space+;
   *|;
   
