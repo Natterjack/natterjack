@@ -1,6 +1,10 @@
 base_path: .
 command: rake test
 filters:
+  - \.h$
   - \.cpp$
-  - \.ragel$
+  - \.rl$
   - Rakefile
+hooks:
+ - pattern: \.h$
+   command: rake clean
