@@ -23,9 +23,10 @@ public:
 			std::cout << "parsing '" << arg << "'" << std::endl;
 			natterjack::TokenStream stream = natterjack::TokenStream::createFromString(arg);
 			auto tok = stream.next();
-			while (tok != nullptr)
+			while (tok->type != natterjack::Token::END &&
+				   tok->type != natterjack::Token::ERROR)
 			{
-				std::cout << tok << std::endl;
+				std::cout << tok->value << std::endl;
 				tok = stream.next();
 			}
 		}
@@ -33,14 +34,16 @@ public:
 	}
 };
 
-// extern "C" int main(int argc, const char* argv[]) {
+#ifndef UNIT_TEST
+extern "C" int main(int argc, const char* argv[]) {
 
-// 	Application::ParameterList args;
+	Application::ParameterList args;
 
-// 	for (int i = 1; i < argc; i++)
-// 	{
-// 		args.push_back(std::string(argv[i]));
-// 	}
+	for (int i = 1; i < argc; i++)
+	{
+		args.push_back(std::string(argv[i]));
+	}
 
-// 	return Application::main(args);
-// }
+	return Application::main(args);
+}
+#endif

@@ -1,6 +1,7 @@
 require 'rake'
 require 'rake/clean'
 require 'rake/tasklib'
+require 'rake/testtask'
 
 ## Configuration
 #
@@ -184,19 +185,19 @@ end
 Project.new 'natterjack' do |project|
   debug_cxx_flags = %w{-g -DDEBUG -o0}
   dirs = [ 'src' ]
-  project.configuration 'debug' do |debug|
-    debug.cxx_flags |= %w{-DNDEBUG -o3}
-    debug.src_dirs.concat dirs
-  end
-  project.configuration 'release' do |release|
-    release.cxx_flags |= debug_cxx_flags
+  project.configuration 'relase' do |release|
+    release.cxx_flags |= %w{-DNDEBUG -o3}
     release.src_dirs.concat dirs
+  end
+  project.configuration 'debug' do |debug|
+    debug.cxx_flags |= debug_cxx_flags
+    debug.src_dirs.concat dirs
   end
   project.configuration 'test' do |test|
     test.cxx_flags |= debug_cxx_flags
     test.cxx_flags << "-iquote #{project.base_dir}/src"
     gtest_dir = ENV['GTEST_DIR']
-    test.cxx_flags << "-I#{gtest_dir}/include"
+    test.cxx_flags << "-I#{gtest_dir}/include -DUNIT_TEST"
     test.ld_flags << "#{gtest_dir}/lib/.libs/libgtest_main.a"
     test.ld_flags << "#{gtest_dir}/lib/.libs/libgtest.a"
     test.src_dirs.concat dirs
@@ -205,9 +206,15 @@ Project.new 'natterjack' do |project|
   end
 end
 
+desc "Run the spec tests"
+Rake::TestTask.new("test_spec") do |t|
+  t.test_files = ['spec/test_spec.rb']
+end
+task :test_spec => [:natterjack_debug]
+
 # Extra dependancy info (and pseudo tasks)
 multitask :all => [:natterjack]
 
-task :test => [:run_natterjack]
+task :test => [:run_natterjack, :test_spec]
 
 task :default => :all
