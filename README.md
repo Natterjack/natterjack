@@ -1,19 +1,30 @@
-# Project Natterjack - Statically Typed Language, Compiler and Runtime
+# Welcome
 
-Natterjack is a statically typed language and virtual machine.
+Natterjack is a statically typed programming language inspired by the power and flexibility of dynamically typed languages.
 
-## File Types
-.nat files: Natterjack source code
-.croak files: Compiled natterjack bytecode objects
-.tad: Natterjack assembly language files
+    class Hello
+        // writes a greeting to the standard output
+        void greet(String thing)
+            IO.put("Hello #{thing}")
+        end   
+    end
 
-## Virtual Machine
-The VM will be a multi-threaded risk-like register VM. Global VM structure will be stored in an `NatterjackVM` structure. Each VM will have a collection of `NatterjackVMThread` structures containing the thread-local data. This will include the values of the registers and as much data as possible. Data or execution state in a given thread will not be available from outside the thread to allow for minimal locking.
+    Hello.new.greet("World!")
 
-Global structure will mainly consist of the loaded binaries and the global configuration options. At a later date this may also include a JIT cache to allow threads to share compiled traces.
+## Pinches of Salt
 
-## VM Structure
-The `NatterjackVM` object will consist of:
+The language is very young at the moment.  It is likely to radically change direction as I work out what I want it to be and test out new features.  Use at your own peril.
 
- * Array of `NatterjackVMThread` structures
- * Hash table of `NatterjackVMImage` structures representing the currently loaded images. Images can either be compiled byte code or dynamic libraries with metadata.
+## Getting Started
+
+Natterjack lives on Bitbucket at <http://bitbucket.org/iwillspeak/natterjack>.  To compile from source you should just need a modern C++ compiler and Rake on a *nix machine.
+
+Once you have the source downloaded you should be able to compile the main executable with `rake`.  To run the unit tests as well run `rake test`.
+
+## Download
+
+Natterjack is in the early stages of development at the moment and only available as source distribution.  To get a copy of the code you can clone the Git repository at `http://bitbucket.org/iwillspeak/natterjack`.
+
+## Docs
+
+Documentation is currently under development and can be found in the `/docs` directory at the root of the repository.
