@@ -215,6 +215,7 @@ task :test_spec => [:natterjack_debug]
 # Extra dependancy info (and pseudo tasks)
 multitask :all => [:natterjack]
 
+desc "Run **all** the tests"
 task :test => [:run_natterjack, :test_spec]
 
 task :default => :all

@@ -1,0 +1,68 @@
+main ::= <statements>
+	 ;
+
+statements ::= <statement> <statements>
+		   |
+		   ;
+
+statement ::= IMPORT STRING
+		  | <class_def>
+		  | <definition>
+		  | <block_stat>
+		  ;
+
+block_stat ::= <control_stat>
+		   | <expression>
+		   ;
+
+control_stat ::= IF <expression> <block> <elif_blocks>
+			 | UNLESS <expression> <block> <elif_blocks>
+			 | WHILE <expression> <block> END
+			 | UNTIL <expression> <block> END
+			 ;
+
+block ::= <block_stat> <block>
+	  |
+	  ;
+
+elif_block ::= ELSIF <expression> <block> <elif_blocks>
+		   | <else_block>
+		   ;
+
+else_block ::= ELSE <block> END
+		   | END
+		   ;
+
+class_def ::= CLASS TYPE <inheritance> <class_body> END
+		  ;
+
+inheritance ::= "<" TYPE <inheritance_chain>
+			|
+			;
+
+inheritance_chain ::= "," TYPE <inheritance_chain>
+				  |
+				  ;
+
+class_body ::= <member_def> <class_body>
+		   |
+		   ;
+
+meber_def ::= <visibility> <definition>
+		  ;
+
+visibility ::= PUBLIC
+		   | PRIVATE
+		   ;
+
+definition ::= TYPE IDENTIFIER <definition_follow>
+		   ;
+
+definition_list ::= <definition> <definition_list>
+				|
+				;
+
+definition_follow ::= "(" <definition_list> ")" <block> END
+				  | "=" <expression>
+				  |
+				  ;

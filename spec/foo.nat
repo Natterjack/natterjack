@@ -1,0 +1,45 @@
+# Definitions
+Number foo
+Decimal bar
+Number hello = 1337
+
+# Should this be allowed? from the expression we can work out the type
+# of the variable.
+bar = 11
+
+# Expressions
+foo * 100 - 12.0
+"bar"
+100 * "foo"
+hello = 0x88
+IO.put(baz(hello, 111))
+
+# Free functions
+Number stuff(Number i, Number j)
+    return 100 - i * j
+end
+
+# this looks a bit odd. Shouldn't be valid.
+String foo(String bar, String stuff(Number i))
+
+end
+
+class Hello
+
+    public Hello()
+		hello = "hello world"
+    end
+
+    private String hello;
+
+    public String myString()
+	    return hello
+    end
+end
+
+class World < Hello
+
+    public String myString()
+        return base.myString() * 100
+    end
+end
