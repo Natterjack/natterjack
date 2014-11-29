@@ -8,6 +8,7 @@
 // ---------------------------------------------------------------------------
 
 #include <iostream>
+#include <fstream>
 #include <vector>
 
 #include "tokenstream.h"
@@ -21,7 +22,8 @@ public:
 	{
 		for (auto arg : args) {
 			std::cout << "parsing '" << arg << "'" << std::endl;
-			natterjack::TokenStream stream = natterjack::TokenStream::createFromString(arg);
+			std::ifstream input(arg);
+			natterjack::TokenStream stream = natterjack::TokenStream::createFromStream(input);
 			auto tok = stream.next();
 			while (tok->type != natterjack::Token::END &&
 				   tok->type != natterjack::Token::ERROR)

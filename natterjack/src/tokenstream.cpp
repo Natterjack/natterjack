@@ -8,6 +8,7 @@
 // ---------------------------------------------------------------------------
 
 #include <string>
+#include <sstream>
 #include <iostream>
 
 #include "lexer.h"
@@ -32,6 +33,13 @@ TokenStream::~TokenStream()
 TokenStream TokenStream::createFromString(const std::string& input)
 {
 	return TokenStream(input);
+}
+
+TokenStream TokenStream::createFromStream(const std::istream& input)
+{
+	std::stringstream buffer;
+	buffer << input.rdbuf();
+	return TokenStream(buffer.str());
 }
 
 Token* TokenStream::next()

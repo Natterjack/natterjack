@@ -23,6 +23,7 @@ namespace natterjack
 		virtual ~TokenStream();
 
 		static TokenStream createFromString(const std::string& input);
+		static TokenStream createFromStream(const std::istream& input);
 
 		virtual Token* next();
 		
