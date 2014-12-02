@@ -23,14 +23,17 @@ public:
 		for (auto arg : args) {
 			std::cout << "parsing '" << arg << "'" << std::endl;
 			std::ifstream input(arg);
-			natterjack::TokenStream stream = natterjack::TokenStream::createFromStream(input);
-			auto tok = stream.next();
-			while (tok->type != natterjack::Token::END &&
-				   tok->type != natterjack::Token::ERROR)
-			{
-				std::cout << tok->value << std::endl;
+
+			natterjack::TokenStream stream =
+				natterjack::TokenStream::createFromStream(input);
+
+			natterjack::Token* tok;
+			do {
 				tok = stream.next();
-			}
+				std::cout << *tok << std::endl;
+			} while (tok->type != natterjack::Token::END &&
+				   tok->type != natterjack::Token::ERROR);
+
 		}
 		return 0;
 	}
@@ -38,6 +41,9 @@ public:
 
 #ifndef UNIT_TEST
 extern "C" int main(int argc, const char* argv[]) {
+
+	// Your streams have no meaning here... :-p
+	std::ostream::sync_with_stdio(false);
 
 	Application::ParameterList args;
 

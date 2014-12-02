@@ -11,6 +11,14 @@
 
 #include <string>
 
+#define TOKEN_TYPES(expr)						\
+	expr(ERROR, -1)								\
+	expr(UNDEFINED, 0)							\
+	expr(OPERATOR, 1)							\
+	expr(INTEGER, 2)							\
+	expr(IDENTIFIER, 3)							\
+	expr(END, 4)								\
+
 namespace natterjack
 {
 	// Token
@@ -18,16 +26,17 @@ namespace natterjack
 	// Represents a single lexeme from an input stream.
 	struct Token
 	{
-		enum {
-			ERROR = -1,
-			UNDEFINED = 0,
-			OPERATOR,
-			INTEGER,
-			IDENTIFIER,
-			END
-		} type;
+#define DEFINE(name, value) name = value,
+		enum TokenType {
+			TOKEN_TYPES(DEFINE)
+		};
+#undef DEFINE
+
+		TokenType type;
 		std::string value;
 	};
+
+	std::ostream& operator << (std::ostream& stream, const Token& token);
 
 	class Lexer
 	{
