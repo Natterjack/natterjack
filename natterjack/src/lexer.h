@@ -10,6 +10,7 @@
 #pragma once
 
 #include <string>
+#include <ostream>
 
 #define TOKEN_TYPES(expr)						\
 	expr(ERROR, -1)								\
