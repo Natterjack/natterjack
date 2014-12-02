@@ -112,3 +112,5 @@ Should it be possible to have a ‘free-floating' function outside a class?
 Single or multiple inheritance.  How do we implement interfaces? Can we use structural typing along with static typing? Would an interface be a way of making the structure you are expecting explicit? I quit like that idea.  The more dynamic we can make the language feel without loosing static types the better.
 
 Object construction will be implemented with standard static method calls as is done in Ruby.  All classes will inherit from a root class which provides an implementation of `allocate` or similar which creates a new instance of the given type with blank fields.  It is then up to `new` to call the correct constructor and return the new object.
+
+If a class provides a constructor method (maybe named `initiali(s|z)e` then the compiler implicitly defines a new with a matching argument list. Not sure what happens if a `new` with that argument list exists already, or even if there is a custom `new` implemented for that class. Might need some messing-about-with to work that one out.

@@ -26,7 +26,7 @@ end
 
 class Hello
 
-    public Hello()
+    public initialise()
 		hello = "hello world"
     end
 
@@ -38,6 +38,12 @@ class Hello
 end
 
 class World < Hello
+
+  public World @new()
+    w = allocate
+    w.initialise()
+    return w
+  end
 
     public String myString()
         return base.myString() * 100
