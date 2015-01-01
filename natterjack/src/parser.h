@@ -9,19 +9,22 @@
 
 #pragma once
 
+#include <list>
 
 namespace natterjack {
 	
 	class TokenStream;
+	class Expression;
 
 	class Parser {
 	public:
 		Parser(TokenStream* tokenStream);
 		virtual ~Parser();
 
-		void parse();
+		std::list<Expression*> parse();
 
 	private:
+		Expression* parseExpression(int bindingPower);
 		TokenStream* tokenStream;
 	};
 }

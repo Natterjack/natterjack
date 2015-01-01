@@ -13,6 +13,7 @@
 
 #include "tokenstream.h"
 #include "parser.h"
+#include "expressions.h"
 
 using namespace natterjack;
 
@@ -30,7 +31,11 @@ public:
 			TokenStream stream =
 				TokenStream::createFromStream(input);
 
-			Parser(&stream).parse();
+			for (auto expr : Parser(&stream).parse())
+			{
+				expr->dump();
+				std::cout << std::endl; // make sure there is a newline
+			}
 		}
 		return 0;
 	}

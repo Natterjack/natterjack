@@ -25,11 +25,14 @@ namespace natterjack
 		static TokenStream createFromString(const std::string& input);
 		static TokenStream createFromStream(std::istream& input);
 
-		virtual Token* next();
-		
+		Token* chomp(Token::TokenType type);
+		Token* peek();
+		Token* next();
+
 	private:
 		TokenStream(std::istream& input);
 		Lexer lexer;
+		Token* buffered;
 	};
 
 }

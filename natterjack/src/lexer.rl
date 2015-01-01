@@ -44,6 +44,10 @@
 		fbreak;
 	};
 
+	"#"[^\n]* => {
+		// ignore comments
+	};
+
     space+;
   *|;
   

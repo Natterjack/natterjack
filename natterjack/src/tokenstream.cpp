@@ -17,7 +17,7 @@
 using namespace natterjack;
 
 TokenStream::TokenStream(std::istream& stream)
-	: lexer(stream)
+	: lexer(stream), buffered(nullptr)
 {
 }
 
@@ -36,7 +36,27 @@ TokenStream TokenStream::createFromStream(std::istream& input)
 	return TokenStream(input);
 }
 
+Token* TokenStream::peek()
+{
+	if (!buffered)
+		buffered = lexer.next();
+
+	return buffered;
+}
+
+Token* TokenStream::chomp(Token::TokenType type)
+{
+	auto head = peek();
+
+	if (head->type != type)
+		return nullptr;
+
+	return head;
+}
+
 Token* TokenStream::next()
 {
-	return lexer.next();
+	auto ret = peek();
+	buffered = nullptr;
+	return ret;
 }

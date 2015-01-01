@@ -19,7 +19,7 @@
 	expr(OPERATOR, 1)							\
 	expr(INTEGER, 2)							\
 	expr(IDENTIFIER, 3)							\
-	expr(END, 4)								\
+	expr(END, 4)
 
 namespace natterjack
 {
@@ -39,6 +39,7 @@ namespace natterjack
 	};
 
 	std::ostream& operator << (std::ostream& stream, const Token& token);
+	std::ostream& operator << (std::ostream& stream, const Token::TokenType& type);
 
 	class Lexer
 	{

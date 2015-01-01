@@ -31,6 +31,13 @@ namespace natterjack {
 		return "<UNKNOWN>";
 	}
 
+	std::ostream& operator << (
+		std::ostream& stream, const Token::TokenType& type)
+	{
+		return stream << typeToName(type);
+	}
+
+
 	std::ostream& operator << (std::ostream& stream, const Token& token) {
 		stream << "<Token " << typeToName(token.type);
 		if (!token.value.empty())
