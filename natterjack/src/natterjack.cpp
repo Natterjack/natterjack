@@ -21,7 +21,7 @@ class Application
 public:
 	typedef std::vector<std::string> ParameterList;
 
-	static int main(ParameterList args)
+	static int main(const ParameterList& args)
 	{
 		for (auto arg : args) {
 			std::cout << "parsing '" << arg << "'" << std::endl;

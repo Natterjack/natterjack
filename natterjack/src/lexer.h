@@ -11,6 +11,7 @@
 
 #include <string>
 #include <ostream>
+#include <istream>
 
 #define TOKEN_TYPES(expr)						\
 	expr(ERROR, -1)								\
@@ -42,7 +43,7 @@ namespace natterjack
 	class Lexer
 	{
 	public:
-		Lexer(std::string buffer);
+		Lexer(std::istream& input);
 		Token* next();
 
 	private:
@@ -54,7 +55,6 @@ namespace natterjack
 		// machine state
 		int act, cs, top, stack[1];
 
-		// our 'buffer'
 		std::string buffer;
 	};
 }

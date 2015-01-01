@@ -23,15 +23,12 @@ namespace natterjack
 		virtual ~TokenStream();
 
 		static TokenStream createFromString(const std::string& input);
-		static TokenStream createFromStream(const std::istream& input);
+		static TokenStream createFromStream(std::istream& input);
 
 		virtual Token* next();
 		
-	protected:
-		// Instances should be created with the factory function
-		TokenStream();
 	private:
-		TokenStream(std::string input);
+		TokenStream(std::istream& input);
 		Lexer lexer;
 	};
 

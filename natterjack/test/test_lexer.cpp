@@ -1,14 +1,17 @@
 #include <gtest/gtest.h>
 #include "lexer.h"
 
+#include <sstream>
+
 using namespace natterjack;
 
 static Lexer CreateLexer(std::string const & input) {
-	return Lexer(input);
+	auto ss = std::stringstream(input);
+	return Lexer(ss);
 }
 
 TEST(Lexer,Create) {
-	auto test = std::string("hello world");
+	auto test = std::stringstream(std::string("hello world"));
 
 	Lexer* lexer = new Lexer(test);
 	ASSERT_NE(nullptr, lexer);

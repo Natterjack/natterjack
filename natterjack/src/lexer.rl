@@ -14,6 +14,7 @@
 
 #include <string>
 #include <iostream>
+#include <sstream>
 
 #define CAPTURE_TOKEN(t) \
 	token->value = std::string(ts, te-ts); \
@@ -52,10 +53,16 @@
 
 using namespace natterjack;
 
-Lexer::Lexer(std::string s)
-	: buffer(s), cs(0), act(0), top(0)
+Lexer::Lexer(std::istream& input)
+	: cs(0), act(0), top(0)
 {
 	%%write init;
+
+	// TODO: don't read all of the buffer here, read from it as needed.
+	std::stringstream sBuf;
+	sBuf << input.rdbuf();
+
+	buffer = sBuf.str();
 
 	// set up the buffer here
 	p = buffer.c_str();

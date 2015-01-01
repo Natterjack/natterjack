@@ -16,13 +16,8 @@
 
 using namespace natterjack;
 
-TokenStream::TokenStream(std::string input)
-	: lexer(input)
-{
-}
-
-TokenStream::TokenStream()
-	: lexer("")
+TokenStream::TokenStream(std::istream& stream)
+	: lexer(stream)
 {
 }
 
@@ -32,14 +27,13 @@ TokenStream::~TokenStream()
 
 TokenStream TokenStream::createFromString(const std::string& input)
 {
-	return TokenStream(input);
+	std::stringstream buffer(input);
+	return TokenStream(buffer);
 }
 
-TokenStream TokenStream::createFromStream(const std::istream& input)
+TokenStream TokenStream::createFromStream(std::istream& input)
 {
-	std::stringstream buffer;
-	buffer << input.rdbuf();
-	return TokenStream(buffer.str());
+	return TokenStream(input);
 }
 
 Token* TokenStream::next()
