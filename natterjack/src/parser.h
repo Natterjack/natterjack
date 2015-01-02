@@ -22,9 +22,9 @@ namespace natterjack {
 		virtual ~Parser();
 
 		std::list<Expression*> parse();
+		Expression* parseExpression(int bindingPower);
 
 	private:
-		Expression* parseExpression(int bindingPower);
 		TokenStream* tokenStream;
 	};
 }

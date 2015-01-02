@@ -28,7 +28,7 @@ namespace natterjack
 		}
 	}
 
-	struct StringExpression : Expression
+	struct StringExpression : public Expression
 	{
 		StringExpression(const std::string& value)
 			: value(value)
@@ -49,7 +49,7 @@ namespace natterjack
 	}
 
 	template <typename T>
-	struct SimpleValueExpression : Expression
+	struct SimpleValueExpression : public Expression
 	{
 		SimpleValueExpression(T value)
 			: value(value)
@@ -84,7 +84,7 @@ namespace natterjack
 		return new BoolExpression(value);
 	}
 
-	struct BinOpExpression : Expression
+	struct BinOpExpression : public Expression
 	{
 		BinOpExpression(Expression* lhs, OperatorType op, Expression* rhs)
 			: lhs(lhs), op(op), rhs(rhs)
@@ -109,7 +109,7 @@ namespace natterjack
 		return new BinOpExpression(lhs, op, rhs);
 	}
 
-	struct UnaryOpExpression : Expression
+	struct UnaryOpExpression : public Expression
 	{
 		enum Assoc { PREFIX, POSTFIX };
 

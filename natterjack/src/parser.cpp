@@ -47,37 +47,74 @@ namespace
 		return Expression::valueExpression(token->value);
 	}
 
-	const std::map<Token::TokenType, PrefixParselet> prefixTypes = {
+	typedef std::map<Token::TokenType, PrefixParselet> PrefixParseletMap;
+	const PrefixParseletMap prefixTypes = {
 		{ Token::INTEGER, NumberParselet },
 		{ Token::IDENTIFIER, StringParselet }
 	};
 
-	// TODO: Add infix parsing for operators
-	// struct InfixParselet
-	// {
-	// 	InfixParselet(int bindingPower)
-	// 		: power(bindingPower)
-	// 	{}
-	// 	virtual ~InfixParselet() = 0;
+	struct InfixParselet
+	{
+		InfixParselet(int bindingPower)
+			: power(bindingPower)
+		{}
 
-	// 	virtual Expression* parse(
-	// 		Parser& parser, Expression* lhs Token* token) = 0;
+		virtual ~InfixParselet()
+		{}
 
-	// 	int power;
-	// };
+		virtual Expression* parse(
+			Parser& parser, Expression* lhs, Token* token) = 0;
 
-	// struct BinOpParselet : InfixParselet
-	// {
-	// 	Expression* parse(Parser& parser, Expression* lhs Token* token)
-	// 	{
-	// 		auto rhs = parser.parseExpression(0);
-	// 		return Expression::binaryExpression(lhs, OperatorType::MUL, rhs);
-	// 	}
-	// };
+		int power;
+	};
 
-	// const std::map<Token::TokenType, InfixParselet> infixTypes = {
-		
-	// };
+	struct BinOpParselet : public InfixParselet
+	{
+		BinOpParselet(int bindingPower)
+			: InfixParselet(bindingPower)
+		{}
+
+		Expression* parse(Parser& parser, Expression* lhs, Token* token)
+		{
+			auto rhs = parser.parseExpression(power);
+			return Expression::binaryExpression(lhs, OperatorType::MUL, rhs);
+		}
+	};
+
+	std::map<Token::TokenType, InfixParselet*> infixTypes = {
+		{ Token::OPERATOR, new BinOpParselet(2) }
+	};
+
+
+	class ParseError : public std::logic_error
+	{
+	public:
+		ParseError(const PrefixParseletMap& expecting, Token* found)
+			: std::logic_error(errorMessage(expecting, found))
+		{}
+
+	private:
+		static std::string errorMessage(
+			const PrefixParseletMap& expecting, Token* found)
+		{
+			std::stringstream err;
+
+			err << "parse error: expecting ";
+
+			bool comma = false;
+			for (auto parselet : expecting)
+			{
+				if (comma)
+					err << ", ";
+				err << parselet.first;
+				comma = true;
+			}
+
+			err << " found " << *found;
+
+			return err.str();
+		}
+	};
 	
 }
 
@@ -109,20 +146,22 @@ namespace
 
 		if (parselet == prefixTypes.end())
 		{
-			std::stringstream err("parse error: ");
-			err << "expecting ";
-			for (auto parselet : prefixTypes)
-			{
-				err << parselet.first << ", ";
-			}
-				
-			err << "found " << *tok;
-			throw std::logic_error(err.str());
+			throw ParseError(prefixTypes, tok);
 		}
 
 		auto lhs = parselet->second(*this, tok);
 
-		
+		// if we can't find an operator parselet we will return the
+		// 'left-hand-side' directly as the whole expression,
+		// otherwise we will repeatedly 'tack-on' right-hand-sides
+		// while the binding power allows us
+		for (auto opParselet = infixTypes.find(tokenStream->peek()->type);
+			 opParselet != infixTypes.end() && bindingPower < opParselet->second->power;
+			 opParselet = infixTypes.find(tokenStream->peek()->type))
+		{
+			tok = tokenStream->next();
+			lhs = opParselet->second->parse(*this, lhs, tok);
+		}
 
 		return lhs;
 	}
