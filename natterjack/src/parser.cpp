@@ -70,19 +70,32 @@ namespace
 
 	struct BinOpParselet : public InfixParselet
 	{
-		BinOpParselet(int bindingPower)
-			: InfixParselet(bindingPower)
+		BinOpParselet(int bindingPower, OperatorType op)
+			: InfixParselet(bindingPower), op(op)
 		{}
 
 		Expression* parse(Parser& parser, Expression* lhs, Token* token)
 		{
 			auto rhs = parser.parseExpression(power);
-			return Expression::binaryExpression(lhs, OperatorType::MUL, rhs);
+			return Expression::binaryExpression(lhs, op, rhs);
 		}
+
+	private:
+		OperatorType op;
 	};
 
 	std::map<Token::TokenType, InfixParselet*> infixTypes = {
-		{ Token::OPERATOR, new BinOpParselet(2) }
+
+		// Asssignment here at 1
+
+		{ Token::OP_EQ, new BinOpParselet(2, OperatorType::EQ) },
+		{ Token::OP_NEQ, new BinOpParselet(2, OperatorType::NOT_EQ) },
+
+		{ Token::OP_ADD, new BinOpParselet(3, OperatorType::ADD) },
+		{ Token::OP_SUB, new BinOpParselet(3, OperatorType::SUB) },
+
+		{ Token::OP_MUL, new BinOpParselet(4, OperatorType::MUL) },
+		{ Token::OP_DIV, new BinOpParselet(4, OperatorType::DIV) },
 	};
 
 

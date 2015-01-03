@@ -36,11 +36,49 @@
 	  CAPTURE_TOKEN(IDENTIFIER);
 	  fbreak;
     };
+	
+	'+' => {
+		CAPTURE_TOKEN(OP_ADD);
+		fbreak;
+	};
 
-    opchar = [+\-*/=];
-		
-    opchar+ => {
-		CAPTURE_TOKEN(OPERATOR);
+	'++' => {
+		CAPTURE_TOKEN(OP_INCREMENT);
+		fbreak;
+	};
+
+	'-' => {
+		CAPTURE_TOKEN(OP_SUB);
+		fbreak;
+	};
+	
+	'--' => {
+		CAPTURE_TOKEN(OP_DECREMENT);
+		fbreak;
+	};
+
+	'*' => {
+		CAPTURE_TOKEN(OP_MUL);
+		fbreak;
+	};
+
+	'/' => {
+		CAPTURE_TOKEN(OP_DIV);
+		fbreak;
+	};
+
+	'==' => {
+		CAPTURE_TOKEN(OP_EQ);
+		fbreak;
+	};
+
+	'!=' => {
+		CAPTURE_TOKEN(OP_NEQ);
+		fbreak;
+	};
+	
+    [+\-*/]?'=' => {
+		CAPTURE_TOKEN(OP_ASSIGN);
 		fbreak;
 	};
 

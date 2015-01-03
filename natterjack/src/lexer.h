@@ -16,10 +16,18 @@
 #define TOKEN_TYPES(expr)						\
 	expr(ERROR, -1)								\
 	expr(UNDEFINED, 0)							\
-	expr(OPERATOR, 1)							\
-	expr(INTEGER, 2)							\
-	expr(IDENTIFIER, 3)							\
-	expr(END, 4)
+	expr(OP_ADD, 1)								\
+	expr(OP_INCREMENT, 2)						\
+	expr(OP_SUB, 3)								\
+	expr(OP_DECREMENT, 4)						\
+	expr(OP_MUL, 5)								\
+	expr(OP_DIV, 6)								\
+	expr(OP_EQ, 7)								\
+	expr(OP_NEQ, 8)								\
+	expr(OP_ASSIGN, 9)							\
+	expr(INTEGER, 10)							\
+	expr(IDENTIFIER, 11)						\
+	expr(END, 12)
 
 namespace natterjack
 {

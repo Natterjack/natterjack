@@ -90,48 +90,46 @@ TEST(Lexer,Operators) {
 
 	auto token = lex.next();
 	ASSERT_NE(nullptr, token);
-	EXPECT_EQ(Token::OPERATOR, token->type);
+	EXPECT_EQ(Token::OP_ADD, token->type);
 	EXPECT_EQ("+", token->value);
 
 	token = lex.next();
 	ASSERT_NE(nullptr, token);
-	EXPECT_EQ(Token::OPERATOR, token->type);
+	EXPECT_EQ(Token::OP_SUB, token->type);
 	EXPECT_EQ("-", token->value);
 
 	token = lex.next();
 	ASSERT_NE(nullptr, token);
-	EXPECT_EQ(Token::OPERATOR, token->type);
+	EXPECT_EQ(Token::OP_MUL, token->type);
 	EXPECT_EQ("*", token->value);
-
-
 
 	token = lex.next();
 	ASSERT_NE(nullptr, token);
-	EXPECT_EQ(Token::OPERATOR, token->type);
+	EXPECT_EQ(Token::OP_DIV, token->type);
 	EXPECT_EQ("/",token->value);
 
 	token = lex.next();
 	ASSERT_NE(nullptr, token);
-	EXPECT_EQ(Token::OPERATOR, token->type);
+	EXPECT_EQ(Token::OP_INCREMENT, token->type);
 	EXPECT_EQ("++",token->value);
 
 	token = lex.next();
 	ASSERT_NE(nullptr, token);
-	EXPECT_EQ(Token::OPERATOR, token->type);
+	EXPECT_EQ(Token::OP_EQ, token->type);
 	EXPECT_EQ("==",token->value);
 
 	token = lex.next();
 	ASSERT_NE(nullptr, token);
-	EXPECT_EQ(Token::OPERATOR, token->type);
+	EXPECT_EQ(Token::OP_ASSIGN, token->type);
 	EXPECT_EQ("=",token->value);
 
 	token = lex.next();
 	ASSERT_NE(nullptr, token);
-	EXPECT_EQ(Token::OPERATOR, token->type);
+	EXPECT_EQ(Token::OP_ASSIGN, token->type);
 	EXPECT_EQ("-=",token->value);
 
 	token = lex.next();
 	ASSERT_NE(nullptr, token);
-	EXPECT_EQ(Token::OPERATOR, token->type);
+	EXPECT_EQ(Token::OP_ASSIGN, token->type);
 	EXPECT_EQ("+=",token->value);
 }
