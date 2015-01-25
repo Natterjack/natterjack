@@ -23,6 +23,8 @@ namespace natterjack {
 
 		std::list<Expression*> parse();
 		Expression* parseExpression(int bindingPower);
+		
+		static Expression* parse(const std::string & input);
 
 	private:
 		TokenStream* tokenStream;

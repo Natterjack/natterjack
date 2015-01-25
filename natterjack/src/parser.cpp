@@ -138,6 +138,12 @@ namespace
 	Parser::~Parser()
 	{ }
 	
+	Expression* Parser::parse(const std::string & input)
+	{
+		auto ts = TokenStream::createFromString(input);
+		return Parser(&ts).parseExpression(0);
+	}
+	
 	std::list<Expression*> Parser::parse()
 	{
 		std::list<Expression*> ret;
