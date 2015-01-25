@@ -1,3 +1,7 @@
+# Build and binary directories
 bin/
 build/
+docs/_build/
+
+# Generated files
 natterjack/src/lexer.cpp

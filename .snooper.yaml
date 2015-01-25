@@ -5,6 +5,7 @@ filters:
   - \.cpp$
   - \.rl$
   - Rakefile$
+  - \.rst$
 hooks:
  - pattern: \.h$
    command: rake clean
