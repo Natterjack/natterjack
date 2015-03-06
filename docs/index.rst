@@ -6,6 +6,7 @@
    :hidden:
    
    Architecture
+   CompilationPipeline
    Grammar
 
 .. include:: ../README.rst

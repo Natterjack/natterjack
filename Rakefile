@@ -212,12 +212,17 @@ Rake::TestTask.new("test_spec") do |t|
 end
 task :test_spec => [:natterjack_debug]
 
+docs_target = 'docs/_build/'
 desc "Build the Sphinx Documentation"
 task :docs => Rake::FileList['docs/**', 'README.rst'] do
-  sh %{sphinx-build -b html docs/ docs/_build/}
+  sh %{sphinx-build -b html docs/ #{docs_target}}
 end
+CLOBBER.include docs_target
 
-CLOBBER.include 'docs/_build/'
+desc "Build and serve the documentation"
+task :docserve => :docs do
+  sh %{(cd #{docs_target} && python -mSimpleHTTPServer)}
+end
 
 # Extra dependancy info (and pseudo tasks)
 multitask :all => [:natterjack]
