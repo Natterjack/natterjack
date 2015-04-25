@@ -24,8 +24,8 @@ Getting Started
 ---------------
 
 Natterjack lives `on Bitbucket
-<http://bitbucket.org/iwillspeak/natterjack>`_.  To compile from source
-you should just need a modern C++ compiler and Rake on a \*nix machine.
+<http://bitbucket.org/iwillspeak/natterjack>`_.  You should be able to
+compile it from source with the latest *Rust* nightly build.
 
 Once you have the source downloaded you should be able to compile the
 main executable with ``rake``.  To run the unit tests as well run

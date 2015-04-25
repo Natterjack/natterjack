@@ -1,0 +1,32 @@
+program = satatements
+
+statements = statement*
+
+statement = import_stat
+          / class_def
+          / definition
+          / block_stat
+
+import_stat = "import" __ string
+
+block_stat = control_stat
+           / expression
+
+// TODO: continue from here...
+control_stat = "if" __ expression ("then" / newline) elif_blocks
+
+// witespace
+__ = (space_char / comment / newline)*
+
+space_char = [ \t]
+
+comment = "//"[^\n]*
+
+newline = "\r" / "\n" / "\r\n"
+
+// literal types
+string = "\"" [^\"]* "\""
+
+number = [0-9]+
+
+bool = "true" / "false"
