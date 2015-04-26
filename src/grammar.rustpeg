@@ -1,0 +1,11 @@
+use ast::Expression;
+use std::str::FromStr;
+
+#[pub]
+expression -> Expression
+    = number_lit
+
+number_lit -> Expression
+    = dec_char+ { Expression { value: i64::from_str(match_str).unwrap() } }
+
+dec_char = [0-9]
