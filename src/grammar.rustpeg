@@ -3,9 +3,21 @@ use std::str::FromStr;
 
 #[pub]
 expression -> Expression
-    = number_lit
+    = __ nvalue:number_lit __ { Expression { value: nvalue } }
 
-number_lit -> Expression
-    = dec_char+ { Expression { value: i64::from_str(match_str).unwrap() } }
+number_lit -> i64
+	= "0x" hex_char+ { i64::from_str_radix(&match_str[2..], 16).unwrap() }
+	/ "0b" bin_char+ { i64::from_str_radix(&match_str[2..], 2).unwrap() }
+	/ "0o" oct_char+ { i64::from_str_radix(&match_str[2..], 8).unwrap() }
+    / dec_char+ { i64::from_str(&match_str).unwrap() }
 
+bin_char = [01]
+oct_char = [0-8]
+hex_char = dec_char / [A-Fa-f]
 dec_char = [0-9]
+
+// whitespace handling
+nl_char = [\r\n]
+sp_char = [ \t]
+_ = sp_char / nl_char
+__ = _*
