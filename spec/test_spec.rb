@@ -1,6 +1,6 @@
 require 'test/unit'
 
-NAT_EXE = '../bin/natterjack/debug/natterjack'
+NAT_EXE = '../target/debug/natterjack'
 
 def methodname(natfile)
   ("test_"+natfile.gsub('/', '_').split('.')[0]).intern
