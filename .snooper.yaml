@@ -1,11 +1,9 @@
 base_path: .
+ignored:
+  - target/.*
 command: rake test
 filters:
-  - \.h$
-  - \.cpp$
-  - \.rl$
   - Rakefile$
   - \.rst$
-hooks:
- - pattern: \.h$
-   command: rake clean
+  - \.rs$
+  - \.rustpeg$
