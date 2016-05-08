@@ -2,6 +2,11 @@
 name = "natterjack"
 version = "0.1.0"
 authors = ["Will Speak <will@willspeak.me>"]
+build = "build.rs"
+
+[build-dependencies]
+syntex = "*"
+syntex_syntax = "*"
 
 [dependencies]
-    peg = "*"
+    peg = "0.3.0"

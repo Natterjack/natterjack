@@ -1,9 +1,6 @@
-#![feature(plugin)]
-#![plugin(peg_syntax_ext)]
-
 mod ast;
 
-peg_file! parser("grammar.rustpeg");
+include!(concat!(env!("OUT_DIR"), "/grammar.rs"));
 
 #[cfg(not(test))]
 fn main() {
@@ -48,7 +45,8 @@ mod test {
     fn test_parse_bin_numbers() {
         check_int_literal("0b1101", 13);
         check_int_literal("0b1111", 15);
-        check_int_literal("0b111111111111111111111111111111111111111111111111111111111111111", ::std::i64::MAX);
+        check_int_literal("0b111111111111111111111111111111111111111111111111111111111111111",
+                          ::std::i64::MAX);
         check_int_literal("0b0", 0);
     }
 
@@ -66,12 +64,14 @@ mod test {
 
     #[test]
     fn test_simple_string() {
-        check_str_literal(r#" "a simple string literal" "#, "a simple string literal".to_string());
+        check_str_literal(r#" "a simple string literal" "#,
+                          "a simple string literal".to_string());
     }
 
     #[test]
     fn test_whitespace_is_preserved() {
-        check_str_literal(r#""    long    string    ""#, "    long    string    ".to_string());
+        check_str_literal(r#""    long    string    ""#,
+                          "    long    string    ".to_string());
     }
 
 }
