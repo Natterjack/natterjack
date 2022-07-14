@@ -1,6 +1,6 @@
 mod ast;
 
-include!(concat!(env!("OUT_DIR"), "/grammar.rs"));
+mod grammar;
 
 #[cfg(not(test))]
 fn main() {
@@ -9,7 +9,7 @@ fn main() {
 
 #[cfg(test)]
 mod test {
-    use super::parser::expression;
+    use super::grammar::natterjack::expression;
     use super::ast::*;
 
     fn check_int_literal(input: &str, expected: i64) {
